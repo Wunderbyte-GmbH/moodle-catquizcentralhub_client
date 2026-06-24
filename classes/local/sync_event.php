@@ -24,14 +24,13 @@
 
 namespace catquizcentralhub_client\local;
 
-use local_catquiz\catquiz;
-use local_catquiz\plugininfo\catquizcentralhub;
+use catquizcentralhub_client\repository\sync_repository;
 use stdClass;
 
 /**
  * Holds a single sync event (parameter import from the central hub).
  */
-class sync_event extends catquizcentralhub {
+class sync_event {
     /** @var int The context ID where this sync event occurs */
     private int $contextid;
 
@@ -44,36 +43,30 @@ class sync_event extends catquizcentralhub {
     /** @var int The ID of the user performing the sync */
     private int $userid;
 
-    /** @var catquiz The catquiz repository instance */
-    private catquiz $repo;
-
     /**
      * Creates a new sync event.
      *
      * @param int $contextid The context ID where this sync event occurs
      * @param int $catscaleid The ID of the CAT scale being synced
      * @param int $numfetchedparams Number of parameters fetched during sync
-     * @param catquiz|null $repo Optional catquiz repository instance
      */
     public function __construct(
         int $contextid,
         int $catscaleid,
-        int $numfetchedparams,
-        ?catquiz $repo = null
+        int $numfetchedparams
     ) {
         global $USER;
         $this->userid = $USER->id;
         $this->contextid = $contextid;
         $this->catscaleid = $catscaleid;
         $this->numfetchedparams = $numfetchedparams;
-        $this->repo = $repo ?? new catquiz();
     }
 
     /**
      * Saves this sync event to the database.
      */
     public function save() {
-        $this->repo->save_sync_event($this->as_record());
+        sync_repository::save_sync_event($this->as_record());
     }
 
     /**

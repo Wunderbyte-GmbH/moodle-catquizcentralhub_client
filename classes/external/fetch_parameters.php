@@ -17,8 +17,8 @@
 namespace catquizcentralhub_client\external;
 
 use catquizcentralhub_client\local\sync_event;
+use catquizcentralhub_client\repository\sync_repository;
 use local_catquiz\hash\question_hasher;
-
 use dml_write_exception;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -106,7 +106,7 @@ class fetch_parameters extends external_api {
             throw new \moodle_exception('scalehasnolabel', 'catquizcentralhub_client', '', $params['scaleid']);
         }
 
-        $targetcontext = $repo->get_last_synced_context_id($scale->id);
+        $targetcontext = sync_repository::get_last_synced_context_id($scale->id);
         $activecontext = catscale::get_context_id($scale->id);
         if (!$targetcontext) {
             $targetcontext = $activecontext;
