@@ -89,12 +89,11 @@ final class sync_event_test extends advanced_testcase {
         $this->assertEquals($this->adminid, $record->userid);
     }
 
-    public function test_saved_event_is_retrievable_by_catquiz(): void {
+    public function test_saved_event_is_retrievable_via_repository(): void {
         ['contextid' => $contextid, 'scaleid' => $scaleid] = $this->create_context_and_scale();
         $event = new sync_event($contextid, $scaleid, 3);
         $event->save();
-        $repo = new \local_catquiz\catquiz();
-        $result = $repo->get_last_synced_context_id($scaleid);
+        $result = \catquizcentralhub_client\repository\sync_repository::get_last_synced_context_id($scaleid);
         $this->assertEquals($contextid, $result);
     }
 
